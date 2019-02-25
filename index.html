@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>chess</title>
+	<style>
+		body{font:14px "Microsoft YaHei",tahoma,Arial;color:#666;-webkit-font-smoothing:antialiased}a{text-decoration:none;color:#6c6c6c}.fl{float:left;display:inline}.fr{float:right;display:inline}.clearfix:after{content:"";height:0;display:block;overflow:hidden;visibility:hidden;clear:both}.tc{text-align:center}.db{display:block}.bc{margin-left:auto;margin-right:auto}.w20p{width:20%}.w25p{width:25%}.w33p{width:33.33%}.w50p{width:50%}body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,html,img,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-weight:400}ol,ul{list-style:none}fieldset,img{border:0 none;vertical-align:middle}address,b,caption,cite,code,dfn,em,i,th,var{font-style:normal;font-weight:400}abbr,acronym{border:0}input{outline:0 none;vertical-align:top}input::-ms-clear{display:none;}q:after,q:before{content:''}table{border-collapse:collapse;border-spacing:0}
+		.container{
+			position:relative;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="title">刀塔自走棋相关查询</div>
+		<div class="content">
+			<ul class="hero-list"></ul>
+			<div class="search-hero"></div>
+			<div class="search-race"></div>
+			<div class="search-career"></div>
+			<div class="search-buff"></div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script>
+		var chess=new Chess();
+
+		$(function(){
+			var $content=$('.content'),
+				$list=$content.find('.hero-list'),
+				$hero=$content.find('.search-hero'),
+				$race=$content.find('.search-race'),
+				$career=$content.find('.search-career'),
+				$buff=$content.find('.search-buff');
+			for(var p in chess.hero){
+				var hero=chess.hero[p]
+				$list.append('<li>'+p+'</li>');
+			}
+		});
+
+		function Chess(){
+			// 种族(键名有1.字符串类型的数字,2.唯一,3.任意)
+			this.race={
+				"人类":{
+					"2":"友方人类攻击20%概率使被攻击敌人缴械3秒",
+					"4":"友方人类攻击25%概率使被攻击敌人缴械3秒",
+					"6":"友方人类攻击30%概率使被攻击敌人缴械3秒"
+				},
+				"兽人":{
+					"2":"友方兽人血量+250",
+					"4":"友方兽人血量+350"
+				},
+				"亡灵":{
+					"2":"敌方全体减甲5",
+					"4":"敌方全体减甲7"
+				},
+				"野兽":{
+					"2":"友方全体攻击+10%(召唤物可继承)",
+					"4":"友方全体攻击+15%(召唤物可继承)",
+					"6":"友方全体攻击+20%(召唤物可继承)"
+				},
+				"地精":{
+					"3":"随机一友军护甲+15回血+10",
+					"6":"友方地精护甲+15回血+10"
+				},
+				"巨魔":{
+					"2":"友方巨魔攻速+35",
+					"4":"友方全体攻速+35"
+				},
+				"精灵":{
+					"2":"友方精灵闪避+20%",
+					"4":"友方精灵闪避+25%",
+					"6":"友方精灵闪避+30%"
+				},
+				"恶魔":{
+					"唯一":"友方场上存在唯一恶魔时，该恶魔攻击+50%"
+				},
+				"娜迦":{
+					"2":"友方全体魔抗+20",
+					"4":"友方全体魔抗+40"
+				},
+				"元素":{
+					"2":"友方元素魔抗+30"
+				},
+				"龙":{
+					"3":"友方龙开局满蓝"
+				},
+				"矮人":{
+					"任意":"友方矮人攻击距离+300"
+				},
+				"食人魔":{
+					"任意":"友方食人魔血量+10%"
+				}
+			};
+			// 职业
+			this.career={
+				"法师":{
+					"3":"友方全体魔抗-30",
+					"6":"友方全体魔抗-60"
+				},
+				"战士":{
+					"3":"友方战士护甲+7",
+					"6":"友方战士护甲+10"
+				},
+				"骑士":{
+					"2":"友方骑士减伤护盾时间+25%",
+					"4":"友方骑士减伤护盾时间+35%",
+					"6":"友方骑士减伤护盾时间+45%"
+				},
+				"术士":{
+					"3":"友方全体吸血+20%",
+					"6":"友方全体吸血+30%"
+				},
+				"猎人":{
+					"3":"友方猎人攻击+25%",
+					"6":"友方猎人攻击+35%"
+				},
+				"工匠":{
+					"2":"友方工匠回血+15",
+					"4":"友方工匠回血+25"
+				},
+				"刺客":{
+					"3":"友方刺客普攻10%造成4倍伤害",
+					"6":"友方刺客普攻20%造成4被伤害"
+				},
+				"德鲁伊":{
+					"2":"2个相同1星可升至2星",
+					"4":"2个相同2星可升至3星"
+				},
+				"萨满祭司":{
+					"2":"开局随机羊一敌人6s"
+				},
+				"恶魔猎手":{
+					"任意":"敌方恶魔不加攻击"
+				},
+			};
+			// 英雄
+			this.hero={
+				"斧王":{race:["兽人"],career:"战士",money:1},
+				"魅惑魔女":{race:["野兽"],career:"德鲁伊",money:1},
+				"食人魔魔法师":{race:["食人魔"],career:"法师",money:1},
+				"巨牙海民":{race:["野兽"],career:"战士",money:1},
+				"卓尔游侠":{race:["亡灵"],career:"猎人",money:1},
+				"赏金猎人":{race:["地精"],career:"刺客",money:1},
+				"发条技师":{race:["地精"],career:"工匠",money:1},
+				"暗影萨满":{race:["巨魔"],career:"萨满祭司",money:1},
+				"蝙蝠骑士":{race:["巨魔"],career:"骑士",money:1},
+				"修补匠":{race:["地精"],career:"工匠",money:1},
+				"敌法师":{race:["精灵"],career:"恶魔猎手",money:1},
+				"水晶室女":{race:["人类"],career:"法师",money:2},
+				"兽王":{race:["兽人"],career:"猎人",money:2},
+				"剑圣":{race:["兽人"],career:"战士",money:2},
+				"伐木机":{race:["地精"],career:"工匠",money:2},
+				"痛苦女王":{race:["恶魔"],career:"刺客",money:2},
+				"精灵龙":{race:["精灵","龙"],career:"法师",money:2},
+				"巫医":{race:["巨魔"],career:"术士",money:2},
+				"鱼人守卫":{race:["娜迦"],career:"战士",money:2},
+				"混沌骑士":{race:["恶魔"],career:"骑士",money:2},
+				"树精卫士":{race:["精灵"],career:"德鲁伊",money:2},
+				"月之骑士":{race:["精灵"],career:"骑士",money:2},
+				"先知":{race:["精灵"],career:"德鲁伊",money:2},
+				"狼人":{race:["人类","野兽"],career:"战士",money:3},
+				"剧毒术士":{race:["野兽"],career:"术士",money:3},
+				"全能骑士":{race:["人类"],career:"骑士",money:3},
+				"闪电幽魂":{race:["元素"],career:"法师",money:3},
+				"风行者":{race:["精灵"],career:"猎人",money:3},
+				"幻影刺客":{race:["精灵"],career:"刺客",money:3},
+				"死亡骑士":{race:["亡灵"],career:"骑士",money:3},
+				"沙王":{race:["野兽"],career:"刺客",money:3},
+				"鱼人夜行者":{race:["娜迦"],career:"刺客",money:3},
+				"狙击手":{race:["矮人"],career:"猎人",money:3},
+				"冥界亚龙":{race:["龙"],career:"刺客",money:3},
+				"影魔":{race:["恶魔"],career:"术士",money:3},
+				"秀逗魔导士":{race:["人类"],career:"法师",money:3},
+				"末日使者":{race:["恶魔"],career:"战士",money:4},
+				"海上将军":{race:["人类"],career:"战士",money:4},
+				"巨魔战将":{race:["巨魔"],career:"战士",money:4},
+				"光之守卫":{race:["人类"],career:"法师",money:4},
+				"死灵法师":{race:["亡灵"],career:"术士",money:4},
+				"圣堂刺客":{race:["精灵"],career:"刺客",money:4},
+				"炼金术士":{race:["地精"],career:"术士",money:4},
+				"干扰者":{race:["兽人"],career:"萨满祭祀",money:4},
+				"蛇发女妖":{race:["娜迦"],career:"猎人",money:4},
+				"龙骑士":{race:["人类","龙"],career:"骑士",money:4},
+				"利爪德鲁伊":{race:["野兽"],career:"德鲁伊",money:4},
+				"矮人直升机":{race:["矮人"],career:"工匠",money:5},
+				"巫妖":{race:["亡灵"],career:"法师",money:5},
+				"抄袭猎人":{race:["娜迦"],career:"猎人",money:5},
+				"谜团":{race:["元素"],career:"术士",money:5},
+				"地精工程师":{race:["地精"],career:"工匠",money:5}
+			};
+		}
+		Chess.prototype._formatHero=function(heroName){
+			var self=this;
+			var hero=this.hero[heroName];
+			return {
+				hero:heroName,
+				race:{
+					race:hero.race.join(" "),
+					buff:(function(){
+							var buf=[];
+							hero.race.forEach(function(item){
+								buf.push({
+									race:item,
+									buff:self.race[item]
+								});
+							});
+							return buf;
+						})()
+				},
+				career:{
+					career:hero.career,
+					buff:this.career[hero.career]
+				},
+				money:hero.money
+			}
+		}
+		// 英雄名查询(可模糊查询) return Array
+		Chess.prototype.getHero=function(hero){
+			var res=[];
+			for(var p in this.hero)
+				if(p.search(hero)!==-1)
+					res.push(this._formatHero(p));
+			return res;
+		};
+		// 种族查询(指定种族) return Array
+		Chess.prototype.getHeroByRace=function(race){
+			var res=[];
+			for(var p in this.hero)
+				if(this.hero[p].race.indexOf(race)!==-1)
+					res.push(this._formatHero(p));
+			return res;
+		};
+		// 职业查询(指定职业) return Array
+		Chess.prototype.getHeroByCareer=function(career){
+			var res=[];
+			for(var p in this.hero)
+				if(this.hero[p].career===career)
+					res.push(this._formatHero(p));
+			return res;
+		};
+		// 查询单条buff(arguments=>'race' or 'career',race or career,number) return Object
+		Chess.prototype.getBuffByMessage=function(prop,type,num){
+			var res={},
+				hasRes=false;
+			var oBuff=this[prop][type];
+			for(var p in oBuff){
+				if(+p>0){
+					if(num>=+p){
+						res[type]={};
+						res[type][p]=oBuff[p];
+						!hasRes&&(hasRes=true);
+					}else
+						break;
+				}else{
+					switch(p){
+						case '任意':
+							res[type]={};
+							res[type][p]=oBuff[p];
+							!hasRes&&(hasRes=true);
+							break;
+						case '唯一':
+							if(num===1){
+								res[type]={
+									1:oBuff[p]
+								};
+								!hasRes&&(hasRes=true);
+							}
+							break;
+					}
+				}
+			}
+			if(hasRes)
+				return res;
+		};
+		// 查询全队buff(指定team(Array)) return Array
+		Chess.prototype.getBuff=function(team){
+			var self=this;
+			var oBuff={
+					race:{},
+					career:{}
+				},
+				res=[];
+			team.forEach(function(item){
+				var hero=self.hero[item];
+				if(hero!==undefined){
+					hero.race.forEach(function(itm){
+						if(itm in oBuff.race)
+							oBuff.race[itm]++;
+						else
+							oBuff.race[itm]=1;
+					});
+					if(hero.career in oBuff.career)
+						oBuff.career[hero.career]++;
+					else
+						oBuff.career[hero.career]=1;
+				}
+			});
+			for(var p in oBuff)
+				for(var pp in oBuff[p]){
+					var buff=this.getBuffByMessage(p,pp,oBuff[p][pp]);
+					if(buff!==undefined)
+						res.push(buff);
+				}
+			return res;
+		};
+	</script>
+</body>
+</html>
