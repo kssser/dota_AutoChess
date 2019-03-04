@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>autoChess</title>
+	<title>DotaChess</title>
 	<meta name="keywords" content="刀塔自走棋">
 	<meta name="description" content="刀塔自走棋">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=1">
@@ -465,16 +465,16 @@
 					"6":"友方人类攻击30%概率使敌人沉默4秒"
 				},
 				"兽人":{
-					"2":"友方兽人血量+250",
-					"4":"友方兽人血量+600[+350]"
+					"2":"友方兽人血量+200",
+					"4":"友方兽人血量+500[+200^+300]"
 				},
 				"亡灵":{
 					"2":"敌方全体护甲-4",
-					"4":"敌方全体护甲-10[-6]"
+					"4":"敌方全体护甲-10[-4^-6]"
 				},
 				"野兽":{
 					"3":"友方全体攻击+20%(召唤物可继承)",
-					"6":"友方全体攻击+26%(召唤物可继承)[+30%]"
+					"6":"友方全体攻击+26%(召唤物可继承)[+20%^+30%]"
 				},
 				"地精":{
 					"3":"随机一友军护甲+15回血+10",
@@ -482,22 +482,23 @@
 				},
 				"巨魔":{
 					"2":"友方巨魔攻速+35",
-					"4":"友方巨魔攻速+30，其中巨魔攻速+65[+30]"
+					"4":"友方巨魔攻速+30，其中巨魔攻速+65[+35^+30]"
 				},
 				"精灵":{
 					"3":"友方精灵闪避+20%",
-					"6":"友方精灵闪避+25%[+25%]",
-					"9":"友方精灵闪避+32.5%[+25%^+30%]"
+					"6":"友方精灵闪避+25%[+20%^+25%]",
+					"9":"友方精灵闪避+32.5%[+20%^+25%^+30%]"
 				},
 				"恶魔":{
 					"唯一":"友方场上存在唯一恶魔时，该恶魔攻击+50%"
 				},
 				"娜迦":{
 					"2":"友方全体魔抗+30",
-					"4":"友方全体魔抗+60[+30]"
+					"4":"友方全体魔抗+60[+30^+30]"
 				},
 				"元素":{
-					"2":"友方元素魔抗+30"
+					"2":"友方元素被近战攻击时30%几率将其石化",
+					"4":"友方全体被近战攻击时30%几率将其石化"
 				},
 				"龙":{
 					"3":"友方龙开局满蓝"
@@ -516,28 +517,29 @@
 			this.career={
 				"法师":{
 					"3":"友方全体魔抗-30",
-					"6":"友方全体魔抗-90[-60]"
+					"6":"友方全体魔抗-90[-30^-60]"
 				},
 				"战士":{
 					"3":"友方战士护甲+7",
-					"6":"友方战士护甲+17[+10]"
+					"6":"友方战士护甲+15[+7^+8]",
+					"9":"友方战士护甲+25[+7^+8^+10]"
 				},
 				"骑士":{
 					"2":"友方骑士减伤护盾时间+25%",
-					"4":"友方骑士减伤护盾时间+33.75%[+35%]",
-					"6":"友方骑士减伤护盾时间+48.9375%[+35%^+45%]"
+					"4":"友方骑士减伤护盾时间+33.75%[+25%^+35%]",
+					"6":"友方骑士减伤护盾时间+48.9375%[+25%^+35%^+45%]"
 				},
 				"术士":{
 					"3":"友方全体吸血+20%",
-					"6":"友方全体吸血+26%[+30%]"
+					"6":"友方全体吸血+26%[+20%^+30%]"
 				},
 				"猎人":{
 					"3":"友方猎人攻击+25%",
-					"6":"友方猎人攻击+31.25%[+25%]"
+					"6":"友方猎人攻击+31.25%[+25%^+25%]"
 				},
 				"工匠":{
 					"2":"友方工匠回血+15",
-					"4":"友方工匠回血+40[+25]"
+					"4":"友方工匠回血+40[+15^+25]"
 				},
 				"刺客":{
 					"3":"友方刺客普攻10%造成4倍伤害",
@@ -556,61 +558,64 @@
 			};
 			// 英雄
 			this.hero={
-				"斧王":{race:["兽人"],career:"战士",money:1},
-				"魅惑魔女":{race:["野兽"],career:"德鲁伊",money:1},
-				"食人魔魔法师":{race:["食人魔"],career:"法师",money:1},
-				"巨牙海民":{race:["野兽"],career:"战士",money:1},
-				"卓尔游侠":{race:["亡灵"],career:"猎人",money:1},
-				"赏金猎人":{race:["地精"],career:"刺客",money:1},
-				"发条技师":{race:["地精"],career:"工匠",money:1},
-				"暗影萨满":{race:["巨魔"],career:"萨满祭司",money:1},
-				"蝙蝠骑士":{race:["巨魔"],career:"骑士",money:1},
-				"修补匠":{race:["地精"],career:"工匠",money:1},
-				"敌法师":{race:["精灵"],career:"恶魔猎手",money:1},
-				"水晶室女":{race:["人类"],career:"法师",money:2},
-				"兽王":{race:["兽人"],career:"猎人",money:2},
-				"剑圣":{race:["兽人"],career:"战士",money:2},
-				"伐木机":{race:["地精"],career:"工匠",money:2},
-				"痛苦女王":{race:["恶魔"],career:"刺客",money:2},
-				"精灵龙":{race:["精灵","龙"],career:"法师",money:2},
-				"巫医":{race:["巨魔"],career:"术士",money:2},
-				"鱼人守卫":{race:["娜迦"],career:"战士",money:2},
-				"混沌骑士":{race:["恶魔"],career:"骑士",money:2},
-				"树精卫士":{race:["精灵"],career:"德鲁伊",money:2},
-				"月之骑士":{race:["精灵"],career:"骑士",money:2},
-				"先知":{race:["精灵"],career:"德鲁伊",money:2},
-				"鱼人夜行者":{race:["娜迦"],career:"刺客",money:2},
-				"狼人":{race:["人类","野兽"],career:"战士",money:3},
-				"剧毒术士":{race:["野兽"],career:"术士",money:3},
-				"全能骑士":{race:["人类"],career:"骑士",money:3},
-				"闪电幽魂":{race:["元素"],career:"法师",money:3},
-				"风行者":{race:["精灵"],career:"猎人",money:3},
-				"幻影刺客":{race:["精灵"],career:"刺客",money:3},
-				"死亡骑士":{race:["亡灵"],career:"骑士",money:3},
-				"沙王":{race:["野兽"],career:"刺客",money:3},
-				"狙击手":{race:["矮人"],career:"猎人",money:3},
-				"冥界亚龙":{race:["龙"],career:"刺客",money:3},
-				"影魔":{race:["恶魔"],career:"术士",money:3},
-				"秀逗魔导士":{race:["人类"],career:"法师",money:3},
-				"隐形刺客":{race:["萨特"],career:"刺客",money:3},
-				"月之女祭司":{race:["精灵"],career:"猎人",money:3},
-				"末日使者":{race:["恶魔"],career:"战士",money:4},
-				"海上将军":{race:["人类"],career:"战士",money:4},
-				"巨魔战将":{race:["巨魔"],career:"战士",money:4},
-				"光之守卫":{race:["人类"],career:"法师",money:4},
-				"死灵法师":{race:["亡灵"],career:"术士",money:4},
-				"圣堂刺客":{race:["精灵"],career:"刺客",money:4},
-				"炼金术士":{race:["地精"],career:"术士",money:4},
-				"干扰者":{race:["兽人"],career:"萨满祭祀",money:4},
-				"蛇发女妖":{race:["娜迦"],career:"猎人",money:4},
-				"龙骑士":{race:["人类","龙"],career:"骑士",money:4},
-				"利爪德鲁伊":{race:["野兽"],career:"德鲁伊",money:4},
-				"矮人直升机":{race:["矮人"],career:"工匠",money:5},
-				"巫妖":{race:["亡灵"],career:"法师",money:5},
-				"抄袭猎人":{race:["娜迦"],career:"猎人",money:5},
-				"谜团":{race:["元素"],career:"术士",money:5},
-				"地精工程师":{race:["地精"],career:"工匠",money:5},
-				"死亡先知":{race:["亡灵"],career:"术士",money:5}
+				"斧王":{race:["兽人"],career:"战士",skill:{name:"狂战士之吼",type:"active"},money:1},
+				"魅惑魔女":{race:["野兽"],career:"德鲁伊",skill:{name:"自然之助",type:"active"},money:1},
+				"食人魔魔法师":{race:["食人魔"],career:"法师",skill:{name:"嗜血术",type:"active"},money:1},
+				"巨牙海民":{race:["野兽"],career:"战士",skill:{name:"海象神拳",type:"active"},money:1},
+				"卓尔游侠":{race:["亡灵"],career:"猎人",skill:{name:"射手天赋",type:"passive"},money:1},
+				"赏金猎人":{race:["地精"],career:"刺客",skill:{name:"投掷飞镖",type:"active"},money:1},
+				"发条技师":{race:["地精"],career:"工匠",skill:{name:"弹幕冲击",type:"active"},money:1},
+				"暗影萨满":{race:["巨魔"],career:"萨满祭司",skill:{name:"妖术",type:"active"},money:1},
+				"蝙蝠骑士":{race:["巨魔"],career:"骑士",skill:{name:"粘性燃油",type:"active"},money:1},
+				"修补匠":{race:["地精"],career:"工匠",skill:{name:"热导飞弹",type:"active"},money:1},
+				"敌法师":{race:["精灵"],career:"恶魔猎手",skill:{name:"法力损毁",type:"passive"},money:1},
+				"小小":{race:["元素"],career:"战士",skill:{name:"投掷",type:"active"},money:1},
+				"水晶室女":{race:["人类"],career:"法师",skill:{name:"奥数光环",type:"passive"},money:2},
+				"兽王":{race:["兽人"],career:"猎人",skill:{name:"野性之斧",type:"active"},money:2},
+				"剑圣":{race:["兽人"],career:"战士",skill:{name:"剑刃风暴",type:"active"},money:2},
+				"伐木机":{race:["地精"],career:"工匠",skill:{name:"死亡旋风",type:"active"},money:2},
+				"痛苦女王":{race:["恶魔"],career:"刺客",skill:{name:"痛苦尖叫",type:"active"},money:2},
+				"精灵龙":{race:["精灵","龙"],career:"法师",skill:{name:"幻象法球",type:"active"},money:2},
+				"巫医":{race:["巨魔"],career:"术士",skill:{name:"麻痹药剂",type:"active"},money:2},
+				"鱼人守卫":{race:["娜迦"],career:"战士",skill:{name:"侵蚀雾霭",type:"active"},money:2},
+				"混沌骑士":{race:["恶魔"],career:"骑士",skill:{name:"混乱之箭",type:"active"},money:2},
+				"树精卫士":{race:["精灵"],career:"德鲁伊",skill:{name:"寄生种子",type:"active"},money:2},
+				"月之骑士":{race:["精灵"],career:"骑士",skill:{name:"月刃",type:"passive"},money:2},
+				"先知":{race:["精灵"],career:"德鲁伊",skill:{name:"自然的呼唤",type:"active"},money:2},
+				"鱼人夜行者":{race:["娜迦"],career:"刺客",skill:{name:"突袭",type:"active"},money:2},
+				"变体精灵":{race:["元素"],career:"刺客",skill:{name:"波浪形态",type:"active"},money:2},
+				"狼人":{race:["人类","野兽"],career:"战士",skill:{name:"变身",type:"active"},money:3},
+				"剧毒术士":{race:["野兽"],career:"术士",skill:{name:"瘟疫守卫",type:"active"},money:3},
+				"全能骑士":{race:["人类"],career:"骑士",skill:{name:"洗礼",type:"active"},money:3},
+				"闪电幽魂":{race:["元素"],career:"法师",skill:{name:"等离子场",type:"active"},money:3},
+				"风行者":{race:["精灵"],career:"猎人",skill:{name:"强力击",type:"active"},money:3},
+				"幻影刺客":{race:["精灵"],career:"刺客",skill:{name:"恩赐解脱",type:"passive"},money:3},
+				"死亡骑士":{race:["亡灵"],career:"骑士",skill:{name:"无光之盾",type:"active"},money:3},
+				"沙王":{race:["野兽"],career:"刺客",skill:{name:"掘地穿刺",type:"active"},money:3},
+				"狙击手":{race:["矮人"],career:"猎人",skill:{name:"暗杀",type:"active"},money:3},
+				"冥界亚龙":{race:["龙"],career:"刺客",skill:{name:"蝮蛇突袭",type:"active"},money:3},
+				"影魔":{race:["恶魔"],career:"术士",skill:{name:"魂之挽歌",type:"active"},money:3},
+				"秀逗魔导士":{race:["人类"],career:"法师",skill:{name:"神灭斩",type:"active"},money:3},
+				"灵魂守卫":{race:["恶魔"],career:"恶魔猎手",skill:{name:"魔化",type:"active"},money:3},
+				"隐形刺客":{race:["萨特"],career:"刺客",skill:{name:"烟幕弹",type:"active"},money:3},
+				"月之女祭司":{race:["精灵"],career:"猎人",skill:{name:"月神箭",type:"active"},money:3},
+				"末日使者":{race:["恶魔"],career:"战士",skill:{name:"末日",type:"active"},money:4},
+				"海上将军":{race:["人类"],career:"战士",skill:{name:"幽灵船",type:"active"},money:4},
+				"巨魔战将":{race:["巨魔"],career:"战士",skill:{name:"热血战魂",type:"passive"},money:4},
+				"光之守卫":{race:["人类"],career:"法师",skill:{name:"冲击波",type:"active"},money:4},
+				"死灵法师":{race:["亡灵"],career:"术士",skill:{name:"死亡脉冲",type:"active"},money:4},
+				"圣堂刺客":{race:["精灵"],career:"刺客",skill:{name:"折光",type:"active"},money:4},
+				"炼金术士":{race:["地精"],career:"术士",skill:{name:"化学狂暴",type:"active"},money:4},
+				"干扰者":{race:["兽人"],career:"萨满祭祀",skill:{name:"静态风暴",type:"active"},money:4},
+				"蛇发女妖":{race:["娜迦"],career:"猎人",skill:{name:"石化凝视",type:"active"},money:4},
+				"龙骑士":{race:["人类","龙"],career:"骑士",skill:{name:"古龙形态",type:"active"},money:4},
+				"利爪德鲁伊":{race:["野兽"],career:"德鲁伊",skill:{name:"熊灵伙伴",type:"active"},money:4},
+				"矮人直升机":{race:["矮人"],career:"工匠",skill:{name:"召唤飞弹",type:"active"},money:5},
+				"巫妖":{race:["亡灵"],career:"法师",skill:{name:"连环霜冻",type:"active"},money:5},
+				"抄袭猎人":{race:["娜迦"],career:"猎人",skill:{name:"毁灭",type:"active"},money:5},
+				"谜团":{race:["元素"],career:"术士",skill:{name:"午夜凋零",type:"active"},money:5},
+				"地精工程师":{race:["地精"],career:"工匠",skill:{name:"自爆炸药桶",type:"active"},money:5},
+				"死亡先知":{race:["亡灵"],career:"术士",skill:{name:"驱使恶灵",type:"active"},money:5}
 			};
 		}
 		Chess.prototype._formatHero=function(heroName){
@@ -635,6 +640,7 @@
 					career:hero.career,
 					buff:this.career[hero.career]
 				},
+				skill:hero.skill,
 				money:hero.money
 			}
 		}
@@ -643,7 +649,7 @@
 			var sHtml='',
 				sPlaceHolder='<i class="placeholder"></i>';
 			heroList.forEach(function(item){
-				var sTitle='<p>'+item.hero+' ( '+item.race.race+' '+item.career.career+' ) ×'+item.money+'</p>',
+				var sTitle='<p>'+item.hero+' ( '+item.race.race+' '+item.career.career+' ) '+item.skill.name+'('+(item.skill.type==="active"?"主动":"被动")+')'+' ×'+item.money+'</p>',
 					sContent=(function(){
 							var s='';
 							item.race.buff.forEach(function(itm){
