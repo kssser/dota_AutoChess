@@ -10,9 +10,9 @@
 * 单页面全屏(无滚动条)
 * 简单添加媒体查询，1000px以上视为PC端，以下为移动端
 * 移动端未适配所有型号手机，自己的荣耀10没问题，嘻嘻
-* Chess中英雄查询可模糊查询，但未添加输入框。控制台暴露chess实例，可通过chess.getHero(heroName) eq:chess.getHero('龙') 得到龙骑、精灵龙、冥界亚龙的数组
+* Chess中英雄查询可模糊查询，但未添加输入框(防止错误输入)。控制台暴露chess实例，可通过chess.getHero(heroName) eq:chess.getHero('龙') return ['精灵龙','冥界亚龙','龙骑士']
 ***
 #### 后续
-+ 添加装备及装备合成(目前仅添加函数，可通过控制台chess.equipment查看)
++ 添加装备及装备合成(目前仅添加函数，可通过控制台chess.equipment查看，eq:chess.equipment.detect(['虚无宝石','治疗指环','虚无宝石','治疗指环']) return ['刷新球'] )
 + 添加各类玩法的阵容推荐
 + 玩法克制(没思路、搁置)
