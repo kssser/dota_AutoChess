@@ -5,8 +5,8 @@
 	<title>dotaAutoChess</title>
 	<meta name="keywords" content="刀塔自走棋">
 	<meta name="description" content="刀塔自走棋">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=1">
+    	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 	<style>
 		body{font:14px "Microsoft YaHei",tahoma,Arial;color:#666;-webkit-font-smoothing:antialiased}a{text-decoration:none;color:#6c6c6c}.fl{float:left;display:inline}.fr{float:right;display:inline}.clearfix:after{content:"";height:0;display:block;overflow:hidden;visibility:hidden;clear:both}.tc{text-align:center}.db{display:block}.bc{margin-left:auto;margin-right:auto}.w20p{width:20%}.w25p{width:25%}.w33p{width:33.33%}.w50p{width:50%}body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,html,img,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-weight:400}ol,ul{list-style:none}fieldset,img{border:0 none;vertical-align:middle}address,b,caption,cite,code,dfn,em,i,th,var{font-style:normal;font-weight:400}abbr,acronym{border:0}input{outline:0 none;vertical-align:top}input::-ms-clear{display:none;}q:after,q:before{content:''}table{border-collapse:collapse;border-spacing:0}
 		html,body{
@@ -459,6 +459,8 @@
 			}
 		});
 
+		var existBug='exist bug';
+
 		function Chess(){
 			// 种族 (子对象中键名有 (1)字符串类型的数字,(2)唯一,(3)任意)
 			this.race={
@@ -783,7 +785,7 @@
 				}
 			return res;
 		};
-		// 装备
+		// 装备构造器
 		function _Equipment(){
 			this.species={
 				// 基本装备
@@ -1099,8 +1101,11 @@
 					var e=this.species[p],
 						curUpgrade=true;
 					// 检测是否可升级
+					var oNeeds={};
 					for(var i=0,len=e.needs.length;i<len;i++){
-						if(!(e.needs[i] in oEquipments)||oEquipments[e.needs[i]]<=0){
+						var need=e.needs[i];
+						need in oNeeds?oNeeds[need]++:(oNeeds[need]=1);
+						if(!(need in oEquipments)||oEquipments[need]<oNeeds[need]){
 							curUpgrade=false;
 							break;
 						}
@@ -1114,13 +1119,12 @@
 					}
 				}
 				var oRes=this._objectCombine(oEquipments,oSynthetic);
+				if(oRes===existBug)
+					return existBug;
 				for(var p in oRes)
 					while(oRes[p]--)
 						res.push(p);
-				if(hasUpgrade)
-					return this.detect(res);
-				else
-					return res;
+				return hasUpgrade?this.detect(res):res;
 			}else if(typeof equipments==="string"){
 				if(this.species[equipments])
 					return [equipments]
@@ -1129,16 +1133,21 @@
 		};
 		// 为this.detect统计当前物品而生
 		_Equipment.prototype._objectCombine=function(o1,o2){
-			var res={};
+			var res={},
+				isBug=false;
 			[o1,o2].forEach(function(item){
-				for(var p in item)
-					while(item[p]--)
-						if(p in res)
-							res[p]++;
-						else
-							res[p]=1;
+				if(!isBug)
+					for(var p in item){
+						if(item[p]<0){	// 添加bug检测，防止页面卡死
+							isBug=true;
+							console.warn(existBug+' in function _Equipment.prototype._objectCombine');
+							return;
+						}
+						while(item[p]--)
+							p in res?res[p]++:(res[p]=1);
+					}
 			});
-			return res;
+			return isBug?existBug:res;
 		};
 	</script>
 </body>
