@@ -1,0 +1,144 @@
+html,body{
+	width:100%;height:100%;
+	overflow:hidden;
+}
+.container{
+	position:relative;
+	width:100%;
+	height:100%;
+	background-color:#111;
+}
+.content{
+	position:absolute;
+	width:1000px;
+	top:40px;bottom:40px;
+	left:0;right:0;
+	margin:auto;
+	overflow:hidden;
+	color:#ccc;
+	// =====公共=====
+	.intro{
+		font-weight:bold;
+		margin-left:-24px;
+		margin-bottom:4px;
+	}
+	.list-item{
+		cursor:pointer;
+		margin-right:10px;
+		&:hover{
+			color:#eee;
+		}
+	}
+	// =============
+	.title{
+		h3,p{
+			text-align:center;
+		}
+		h3{
+			font-family:'楷体';
+			font-size:30px;
+			font-weight: bold;
+			margin-bottom:10px;
+		}
+		p{
+			text-indent:250px;
+		}
+	}
+	.hero-container,.equipment-container{
+		&>div{
+			margin-top:10px;
+			padding:0 24px;
+		}
+	}
+	.hero-container{
+		.hero-detail{
+			.tab-container .tab-nav li{
+				cursor:pointer;
+				margin-right:10px;
+			}
+			.buff-title{
+				margin-right:15px;
+				font-weight:bold;
+			}
+		}
+		.team-buff{
+			.switch{
+				font-weight:bold;
+				margin-left:10px;
+				border:0 none;
+				outline:0 none;
+				background-color:transparent;
+				color:#ccc;
+				text-decoration:underline;
+				cursor:pointer;
+				&:hover{
+					color:#fff;
+				}
+			}
+			.buff-title{
+				margin-right:15px;
+				font-weight:bold;
+			}
+		}
+	}
+	.equipment-container{
+
+	}
+}
+@media screen and (max-width:999px){
+    .content{
+    	width:auto;
+    	top:5px;bottom:5px;
+    	left:10px;right:10px;
+    	&>div+div{
+	    	padding:0 10px;
+	    	margin-top:4px;
+	    }
+	    .title{display:none;}
+		.hero-list,.race-list,.career-list{
+			li{
+				cursor:pointer;
+				margin-right:5px;
+				font-size:12px;
+			}
+		}
+    }
+	.team-hero,.buff-list{
+		font-size:12px;
+	}
+	.tab-container{
+		font-size:12px;
+	}
+	.intro{
+		margin-left:-10px;
+		margin-bottom:0;
+		font-size:12px;
+	}
+	.buff-title{
+		margin-right:8px;
+		font-weight:bold;
+	}
+	.placeholder{
+		width:5px;
+	}
+}
+
+.focus{
+	color:#f50 !important;
+	font-weight:bold;
+}
+.ml1em{
+	margin-left:1em;
+}
+.ti1em{
+	text-indent:1em;
+}
+.selected{
+	color:#0f0 !important;
+	font-weight:bold;
+}
+.placeholder{
+	display:inline-block;
+	width:15px;
+	vertical-align:top;
+}
