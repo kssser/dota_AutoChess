@@ -22,7 +22,7 @@ function Chess(){
 		},
 		"地精":{
 			"3":"随机一友军护甲+15回血+10",
-			"6":"友方地精护甲+15回血+10"
+			"6":"友方全体护甲+15回血+10"
 		},
 		"巨魔":{
 			"2":"友方巨魔攻速+35",
@@ -79,7 +79,7 @@ function Chess(){
 		},
 		"猎人":{
 			"3":"友方猎人攻击+25%",
-			"6":"友方猎人攻击+50%[+25%+25%]"
+			"6":"友方猎人攻击+55%[+25%+30%]"
 		},
 		"工匠":{
 			"2":"友方工匠回血+15",
@@ -343,7 +343,7 @@ function _Equipment(){
 		"治疗指环":{
 			effect:"回血+10",
 			needs:null,
-			upgrade:["挑战头巾","先锋盾","刷新球"],
+			upgrade:["坚韧球","挑战头巾","先锋盾"],
 			range:0
 		},
 		"抗魔斗篷":{
@@ -437,7 +437,7 @@ function _Equipment(){
 			range:0
 		},
 		"枯萎之石":{
-			effect:"敌人护甲-5",
+			effect:"敌人护甲-3",
 			needs:null,
 			upgrade:["暗灭"],
 			range:0
@@ -451,7 +451,7 @@ function _Equipment(){
 		"虚无宝石":{
 			effect:"造成伤害时获得的法力值+100%",
 			needs:null,
-			upgrade:["邪恶镰刀","刷新球"],
+			upgrade:["坚韧球","邪恶镰刀"],
 			range:0
 		},
 		"法师长袍":{
@@ -485,7 +485,7 @@ function _Equipment(){
 			range:1
 		},
 		"挑战头巾":{
-			effect:"回血+10，魔抗+30",
+			effect:"回血+15，魔抗+30",
 			needs:["治疗指环","回复指环","抗魔斗篷"],
 			upgrade:null,
 			range:1
@@ -508,6 +508,12 @@ function _Equipment(){
 			upgrade:null,
 			range:1
 		},
+		"坚韧球":{
+			effect:"回血+10，造成伤害时获得的法力值+100%",
+			needs:["治疗指环","虚无宝石"],
+			upgrade:["狂战斧","刷新球"],
+			range:1
+		},
 		"慧光":{
 			effect:"被攻击敌人魔抗-100",
 			needs:["魔力法杖","法师长袍"],
@@ -517,12 +523,6 @@ function _Equipment(){
 		"邪恶镰刀":{
 			effect:"被攻击的敌人魔抗-20，造成和受到伤害时获得的法力值+50%，血量+250",
 			needs:["神秘法杖","极限法球","虚无宝石"],
-			upgrade:null,
-			range:1
-		},
-		"刷新球":{
-			effect:"造成伤害时获得的法力值+200%，刷新技能cd，冷却30s",
-			needs:["虚无宝石","虚无宝石","治疗指环","治疗指环"],
 			upgrade:null,
 			range:1
 		},
@@ -574,9 +574,21 @@ function _Equipment(){
 			upgrade:null,
 			range:1
 		},
+		"狂战斧":{
+			effect:"攻击+30，回血+10，造成伤害时获得的法力值+100%，近战300码50%溅射",
+			needs:["坚韧球","恶魔刀锋"],
+			upgrade:null,
+			range:2
+		},
 		"代达罗斯之殇":{
 			effect:"攻击+40，10%概率4倍伤害",
 			needs:["水晶剑","恶魔刀锋"],
+			upgrade:null,
+			range:2
+		},
+		"刷新球":{
+			effect:"造成伤害时获得的法力值+200%，刷新技能cd，冷却30s",
+			needs:["坚韧球","坚韧球"],
 			upgrade:null,
 			range:2
 		},
