@@ -618,13 +618,43 @@ function _Equipment(){
 		}
 	}
 }
+// 检测是否存在某装备 return true or false
+_Equipment.prototype.verifyExist=function(equipment){
+	return equipment in this.species?true:false;
+};
+// 统一格式化指定装备
+_Equipment.prototype.formatEquipment=function(equipment){
+	return this.verifyExist(equipment)?Object.assign({},this.species[equipment],{name:equipment}):undefined;
+};
 // 目前range范围=>[0,5]
-_Equipment.prototype.getRange=function(range){
+_Equipment.prototype.getRangeEquipments=function(range){
 	var res=[];
 	for(var p in this.species)
 		if(this.species[p].range===range)
 			res.push(p);
 	return res;
+};
+// 得到当前装备的range，没有该装备返回-1
+_Equipment.prototype.getRange=function(equipment){
+	return this.verifyExist(equipment)?this.species[equipment].range:-1;
+};
+// 为this.detect统计当前物品而生
+_Equipment.prototype._objectCombine=function(o1,o2){
+	var res={},
+		isBug=false;
+	[o1,o2].forEach(function(item){
+		if(!isBug)
+			for(var p in item){
+				if(item[p]<0){	// 添加bug检测，防止页面卡死
+					isBug=true;
+					console.warn(existBug+' in function _Equipment.prototype._objectCombine');
+					return;
+				}
+				while(item[p]--)
+					p in res?res[p]++:(res[p]=1);
+			}
+	});
+	return isBug?existBug:res;
 };
 // 装备检测+合成(equipments=>[装备名*n])(注：合成与放入顺序有关--两件合成物品同时需要且存在某一物品时)
 _Equipment.prototype.detect=function(equipments){
@@ -634,7 +664,7 @@ _Equipment.prototype.detect=function(equipments){
 			oSynthetic={},
 			res=[];
 		equipments.forEach(function(item){
-			if(self.species[item])
+			if(self.verifyExist(item))
 				if(item in oEquipments)
 					oEquipments[item]++
 				else{
@@ -676,26 +706,34 @@ _Equipment.prototype.detect=function(equipments){
 				res.push(p);
 		return hasUpgrade?this.detect(res):res;
 	}else if(typeof equipments==="string"){
-		if(this.species[equipments])
+		if(this.verifyExist(equipments))
 			return [equipments]
 	}
 	return [];
 };
-// 为this.detect统计当前物品而生
-_Equipment.prototype._objectCombine=function(o1,o2){
-	var res={},
-		isBug=false;
-	[o1,o2].forEach(function(item){
-		if(!isBug)
-			for(var p in item){
-				if(item[p]<0){	// 添加bug检测，防止页面卡死
-					isBug=true;
-					console.warn(existBug+' in function _Equipment.prototype._objectCombine');
-					return;
+// 拆分装备，存在返回range为0的数组合集，不存在返回undefined
+_Equipment.prototype.split=function(equipment){
+	var self=this;
+	return this.verifyExist(equipment)?(function(){
+		var res=[],
+			e=self.species[equipment],
+			range=e.range;
+		if(range>0){
+			var needs=[].concat(e.needs);
+			while(range--){
+				var len=needs.length;
+				while(len--){
+					var need=needs[len],
+						eNeed=self.species[need];
+					if(eNeed.range>0)
+						needs=needs.concat(eNeed.needs);
+					else
+						res.push(need);
+					needs.splice(len,1);
 				}
-				while(item[p]--)
-					p in res?res[p]++:(res[p]=1);
 			}
-	});
-	return isBug?existBug:res;
-};
+		}else
+			res.push(equipment);
+		return res;
+	})():undefined;
+}
