@@ -33,6 +33,9 @@ body {
 .content .list-item:hover {
   color: #eee;
 }
+.content .title {
+  height: 65px;
+}
 .content .title h3,
 .content .title p {
   text-align: center;
@@ -46,20 +49,22 @@ body {
 .content .title p {
   text-indent: 250px;
 }
+.content .hero-container,
+.content .equipment-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 65px;
+  bottom: 0;
+  overflow: hidden;
+}
 .content .hero-container > div,
 .content .equipment-container > div {
   margin-top: 10px;
   padding: 0 24px;
 }
-.content .hero-container .hero-detail .tab-container .tab-nav li {
-  cursor: pointer;
-  margin-right: 10px;
-}
-.content .hero-container .hero-detail .buff-title {
-  margin-right: 15px;
-  font-weight: bold;
-}
-.content .hero-container .team-buff .switch {
+.content .hero-container .switch,
+.content .equipment-container .switch {
   font-weight: bold;
   margin-left: 10px;
   border: 0 none;
@@ -69,12 +74,24 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
-.content .hero-container .team-buff .switch:hover {
+.content .hero-container .switch:hover,
+.content .equipment-container .switch:hover {
   color: #fff;
+}
+.content .hero-container .hero-detail .tab-container .tab-nav li {
+  cursor: pointer;
+  margin-right: 10px;
+}
+.content .hero-container .hero-detail .buff-title {
+  margin-right: 15px;
+  font-weight: bold;
 }
 .content .hero-container .team-buff .buff-title {
   margin-right: 15px;
   font-weight: bold;
+}
+.content .equipment-container {
+  display: none;
 }
 @media screen and (max-width: 999px) {
   .content {
