@@ -40,7 +40,17 @@
 					<div class="buff-list"></div>
 				</div>
 			</div>
-			<div class="equipment-container"></div>
+			<div class="equipment-container">
+				<div class="species"></div>
+				<div class="detail">
+					<p class="intro">装备详情</p>
+					<div class="ctx"></div>
+				</div>
+				<div class="detect">
+					<p class="intro"><span>装备合成检测</span> <button class="switch">开启(点此开启装备合成检测)</button></p>
+					<div class="equipments"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -56,13 +66,17 @@
 				hero:{
 					model:'alone',	// alone or team
 					limit:10
+				},
+				equipment:{
+					model:'alone',	// alone or total
+					limit:10
 				}
 			};
 
 			var $content=$('.content');
 
 			function heroContainer(){
-				var $heroContainer=$content.find('.hero-container'),
+				var $heroContainer=$content.children('.hero-container'),
 					$heroList=$heroContainer.find('.hero-list'),
 					$raceList=$heroContainer.find('.race-list'),
 					$careerList=$heroContainer.find('.career-list'),
@@ -247,6 +261,94 @@
 				});
 			}
 			heroContainer();
+
+			function equipmentContainer(){
+				var equipment=chess.equipment;
+
+				var $equipmentContainer=$content.children('.equipment-container'),
+					$species=$equipmentContainer.find('.species'),
+					$baseEquipments=$('<div></div>').appendTo($species),
+					$baseEquipmentsCtx=$('<ul></ul>',{'class':'clearfix'}).appendTo($baseEquipments),
+					$upgradeEquipments=$('<div></div>',{'class':'mt10'}).appendTo($species),
+					$upgradeEquipmentsCtx=$('<ul></ul>',{'class':'clearfix'}).appendTo($upgradeEquipments),
+					$equipmentCtx=$equipmentContainer.find('.detail .ctx'),
+					$detect=$equipmentContainer.children('.detect'),
+					$switch=$detect.find('.switch'),
+					$equipments=$detect.find('.equipments');
+				$('<p></p>',{'class':'intro'}).html('基本装备').prependTo($baseEquipments);
+				$('<p></p>',{'class':'intro'}).html('进阶装备').prependTo($upgradeEquipments);
+
+				for(var p in equipment.species){
+					var e=equipment.species[p],
+						$li=$('<li></li>',{'class':'fl list-item'}).html(p);
+					(function($el,equipmentName){
+						$el.on('click',function(){
+							if(config.equipment.model==='alone'){
+								if(!$(this).is('.focus')){
+									$baseEquipmentsCtx.children('.focus').removeClass('focus');
+									$upgradeEquipmentsCtx.children('.focus').removeClass('focus');
+									$(this).addClass('focus');
+									$equipmentCtx.html(formatEquipmentDetail(equipmentName));
+								}
+							}else{
+								equipmentDetect.select($(this));
+								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('<em class="placeholder"></em>'):"");
+							}
+						});
+					})($li,p);
+					$li.appendTo(e.range===0?$baseEquipmentsCtx:$upgradeEquipmentsCtx);
+				}
+
+				var equipmentDetect={
+					data:[],
+					open:function(){
+						config.equipment.model='total';
+					},
+					clear:function(){
+						// 简单处理
+						$baseEquipmentsCtx.children('.selected').removeClass('selected');
+						$upgradeEquipmentsCtx.children('.selected').removeClass('selected');
+						$equipments.html('');
+						this.data.length=0;
+					},
+					close:function(){
+						this.clear();
+						config.equipment.model='alone';
+					},
+					select:function($el){
+						var equipmentName=$el.html();
+						$el.addClass('selected');
+						this.data.push(equipmentName);
+					}
+				};
+				$switch.on('click',function(){
+					if(config.equipment.model==='alone'){
+						equipmentDetect.open();
+						$(this).html('关闭(点此关闭装备合成检测)').prev().addClass('focus');
+					}else{
+						equipmentDetect.close();
+						$(this).html('开启(点此开启装备合成检测)').prev().removeClass('focus');
+					}
+				});
+
+				function formatEquipmentDetail(equipmentName){
+					var sHtml='';
+					if(equipment.verifyExist(equipmentName)){
+						var e=equipment.formatEquipment(equipmentName);
+						sHtml+=[
+								'<div>',
+								'<p>'+equipmentName+'</p>',
+								'<p class="ti1em">'+e.effect+'</p>',
+								e.range>0?'<p class="ti1em">'+equipmentName+' = '+e.needs.join('+')+'</p>':'',
+								'<p class="ti1em">'+(e.upgrade===null?'不可继续升级':'可升级为 '+e.upgrade.join('/'))+'</p>',
+								'</div>'
+							].join('');
+					}else
+						sHtml+='<p class="ti1em">抱歉，暂时无法查询到指定装备</p>';
+					return sHtml;
+				}
+			}
+			equipmentContainer();
 		});
 	</script>
 </body>
