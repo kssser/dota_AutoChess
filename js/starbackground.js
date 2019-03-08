@@ -3,7 +3,7 @@ function starBackground(){
 	var container=document.getElementById('container'),
 		w=container.offsetWidth,
 		h=container.offsetHeight;
-	var canvas=document.getElementById('myCanvas'),
+	var canvas=document.createElement('canvas'),
 		ctx=canvas.getContext('2d');
 	canvas.width=w;
 	canvas.height=h;
@@ -78,4 +78,6 @@ function starBackground(){
 		window.requestAnimationFrame(animation);
 	}
 	animation();
+
+	container.appendChild(canvas);
 }
