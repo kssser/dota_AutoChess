@@ -576,13 +576,13 @@ function _Equipment(){
 		},
 		"狂战斧":{
 			effect:"攻击+30，回血+10，造成伤害时获得的法力值+100%，近战300码50%溅射",
-			needs:["坚韧球","恶魔刀锋"],
+			needs:["恶魔刀锋","坚韧球"],
 			upgrade:null,
 			range:2
 		},
 		"代达罗斯之殇":{
 			effect:"攻击+40，10%概率4倍伤害",
-			needs:["水晶剑","恶魔刀锋"],
+			needs:["恶魔刀锋","水晶剑"],
 			upgrade:null,
 			range:2
 		},
@@ -594,25 +594,25 @@ function _Equipment(){
 		},
 		"达贡之神力(2)":{
 			effect:"被攻击敌人魔抗-60，造成伤害时获得的法力值+50%，主动对随机敌人造成500点魔法伤害",
-			needs:["达贡之神力","魔力法杖"],
+			needs:["魔力法杖","达贡之神力"],
 			upgrade:["达贡之神力(3)"],
 			range:2
 		},
 		"达贡之神力(3)":{
 			effect:"被攻击敌人魔抗-90，造成伤害时获得的法力值+50%，主动对随机敌人造成600点魔法伤害",
-			needs:["达贡之神力(2)","魔力法杖"],
+			needs:["魔力法杖","达贡之神力(2)"],
 			upgrade:["达贡之神力(4)"],
 			range:3
 		},
 		"达贡之神力(4)":{
 			effect:"被攻击敌人魔抗-120，造成伤害时获得的法力值+50%，主动对随机敌人造成700点魔法伤害",
-			needs:["达贡之神力(3)","魔力法杖"],
+			needs:["魔力法杖","达贡之神力(3)"],
 			upgrade:["达贡之神力(5)"],
 			range:4
 		},
 		"达贡之神力(5)":{
 			effect:"被攻击敌人魔抗-150，造成伤害时获得的法力值+50%，主动对随机敌人造成800点魔法伤害",
-			needs:["达贡之神力(4)","魔力法杖"],
+			needs:["魔力法杖","达贡之神力(4)"],
 			upgrade:null,
 			range:5
 		}
@@ -645,16 +645,27 @@ _Equipment.prototype._objectCombine=function(o1,o2){
 	[o1,o2].forEach(function(item){
 		if(!isBug)
 			for(var p in item){
-				if(item[p]<0){	// 添加bug检测，防止页面卡死
+				var len=item[p].number;
+				if(len<0){	// 添加bug检测，防止页面卡死
 					isBug=true;
-					console.warn(existBug+' in function _Equipment.prototype._objectCombine');
+					console.warn(existBug+' in function _Equipment.prototype._objectCombine!');
 					return;
 				}
-				while(item[p]--)
-					p in res?res[p]++:(res[p]=1);
+				while(item[p].number--)
+					p in res?(res[p].number++,res[p].indexs.push(item[p].indexs[len-item[p].number-1])):(res[p]={number:1,indexs:[item[p].indexs[0]]});
 			}
 	});
 	return isBug?existBug:res;
+};
+_Equipment.prototype._clearEmptyItem=function(array){
+	if(Array.isArray(array)){
+		var len=array.length;
+		while(len--)
+			if(array[len]===undefined)
+				array.splice(len,1);
+		return array;
+	}else
+		console.warn('function _Equipment.prototype._clearEmptyItem need an array as a parameter!');
 };
 // 装备检测+合成(equipments=>[装备名*n])(注：合成与放入顺序有关--两件合成物品同时需要且存在某一物品时)
 _Equipment.prototype.detect=function(equipments){
@@ -663,16 +674,23 @@ _Equipment.prototype.detect=function(equipments){
 		var oEquipments={},
 			oSynthetic={},
 			res=[];
-		equipments.forEach(function(item){
+		equipments.forEach(function(item,index){
 			if(self.verifyExist(item))
-				if(item in oEquipments)
-					oEquipments[item]++
-				else{
-					oEquipments[item]=1;
+				if(item in oEquipments){
+					oEquipments[item].number++;
+					oEquipments[item].indexs.push(index);
+				}else{
+					oEquipments[item]={
+						number:1,
+						indexs:[index]
+					};
 					var e=self.species[item];
 					if(Array.isArray(e.upgrade)&&e.upgrade.length>0)
 						e.upgrade.forEach(function(itm){
-							oSynthetic[itm]=0;
+							oSynthetic[itm]={
+								number:0,
+								indexs:[]
+							};
 						});
 				}
 		});
@@ -685,25 +703,31 @@ _Equipment.prototype.detect=function(equipments){
 			for(var i=0,len=e.needs.length;i<len;i++){
 				var need=e.needs[i];
 				need in oNeeds?oNeeds[need]++:(oNeeds[need]=1);
-				if(!(need in oEquipments)||oEquipments[need]<oNeeds[need]){
+				if(!(need in oEquipments)||oEquipments[need].number<oNeeds[need]){
 					curUpgrade=false;
 					break;
 				}
 			}
 			if(curUpgrade){
-				oSynthetic[p]++;
+				var idx=100;
 				e.needs.forEach(function(item){
-					oEquipments[item]--;
+					oEquipments[item].number--;
+					idx=Math.min(idx,oEquipments[item].indexs.splice(0,1));
 				});
+				oSynthetic[p].number++;
+				oSynthetic[p].indexs.push(idx);
 				hasUpgrade=true;
 			}
 		}
 		var oRes=this._objectCombine(oEquipments,oSynthetic);
 		if(oRes===existBug)
 			return existBug;
-		for(var p in oRes)
-			while(oRes[p]--)
-				res.push(p);
+		for(var p in oRes){
+			var len=oRes[p].number;
+			while(oRes[p].number--)
+				res[oRes[p].indexs[len-oRes[p].number-1]]=p;
+		}
+		this._clearEmptyItem(res);
 		return hasUpgrade?this.detect(res):res;
 	}else if(typeof equipments==="string"){
 		if(this.verifyExist(equipments))
