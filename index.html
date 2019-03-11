@@ -51,6 +51,7 @@
 					<div class="equipments"></div>
 				</div>
 			</div>
+			<div class="model-container clearfix"></div>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -63,17 +64,22 @@
 			starBackground();
 
 			var config={
+				model:'hero',		// hero or equipment
 				hero:{
 					model:'alone',	// alone or team
 					limit:10
 				},
 				equipment:{
 					model:'alone',	// alone or total
-					limit:10
+					limit:9
 				}
 			};
 
-			var $content=$('.content');
+			var $content=$('.content'),
+				modelElements={};
+			$content.on('contextmenu',function(e){
+				e.preventDefault();
+			});
 
 			function heroContainer(){
 				var $heroContainer=$content.children('.hero-container'),
@@ -81,6 +87,7 @@
 					$raceList=$heroContainer.find('.race-list'),
 					$careerList=$heroContainer.find('.career-list'),
 					$heroDetail=$heroContainer.find('.hero-detail');
+				modelElements.hero=$heroContainer;
 				function createList(){
 					var $heroCtx=$('<ul></ul>',{'class':'clearfix'}).appendTo($heroList),
 						$raceCtx=$('<ul></ul>',{'class':'clearfix'}).appendTo($raceList),
@@ -275,6 +282,7 @@
 					$detect=$equipmentContainer.children('.detect'),
 					$switch=$detect.find('.switch'),
 					$equipments=$detect.find('.equipments');
+				modelElements.equipment=$equipmentContainer;
 				$('<p></p>',{'class':'intro'}).html('基本装备').prependTo($baseEquipments);
 				$('<p></p>',{'class':'intro'}).html('进阶装备').prependTo($upgradeEquipments);
 
@@ -294,6 +302,11 @@
 								equipmentDetect.select($(this));
 								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('<em class="placeholder"></em>'):"");
 							}
+						}).on('contextmenu',function(e){
+							if(config.equipment.model==='total'){
+								equipmentDetect.unselect($el);
+								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('<em class="placeholder"></em>'):"");
+							}
 						});
 					})($li,p);
 					$li.appendTo(e.range===0?$baseEquipmentsCtx:$upgradeEquipmentsCtx);
@@ -306,9 +319,9 @@
 					},
 					clear:function(){
 						// 简单处理
-						$baseEquipmentsCtx.children('.selected').removeClass('selected');
+						$baseEquipmentsCtx.children('.selected').removeClass('selected').removeClass('addition').attr('data-number',0);
 						$upgradeEquipmentsCtx.children('.selected').removeClass('selected');
-						$equipments.html('');
+						$equipments.html('').removeClass('addition').attr('data-number',0);
 						this.data.length=0;
 					},
 					close:function(){
@@ -317,8 +330,33 @@
 					},
 					select:function($el){
 						var equipmentName=$el.html();
-						$el.addClass('selected');
+						// if(this.data.length>=config.equipment.limit){
+						// 	alert(config.equipment.limit+'个装备你放的下吗');
+						// 	return;
+						// }
+						if(this.data.indexOf(equipmentName)===-1){
+							$el.addClass('selected');
+						}else{
+							$el.addClass('addition');
+							$el.attr('data-number',this.data.filter(function(item){return item===equipmentName}).length+1);
+						}
 						this.data.push(equipmentName);
+					},
+					unselect:function($el){
+						var equipmentName=$el.html(),
+							positiveIndex=this.data.indexOf(equipmentName),
+							negativeIndex=this.data.reverse().indexOf(equipmentName);
+						if(positiveIndex!==-1){
+							if(positiveIndex+negativeIndex+1===this.data.length){
+								$el.removeClass('selected');
+							}else{
+								var number=this.data.filter(function(item){return item===equipmentName}).length;
+								number===2&&$el.removeClass('addition');
+								$el.attr('data-number',number-1);
+							}
+							this.data.splice(negativeIndex,1);
+							this.data.reverse();
+						}
 					}
 				};
 				$switch.on('click',function(){
@@ -340,6 +378,7 @@
 								'<p>'+equipmentName+'</p>',
 								'<p class="ti1em">'+e.effect+'</p>',
 								e.range>0?'<p class="ti1em">'+equipmentName+' = '+e.needs.join('+')+'</p>':'',
+								e.range>1?'<p class="ti1em">'+equipmentName+' = '+chess.equipment.split(equipmentName).join('+')+'</p>':'',
 								'<p class="ti1em">'+(e.upgrade===null?'不可继续升级':'可升级为 '+e.upgrade.join('/'))+'</p>',
 								'</div>'
 							].join('');
@@ -349,6 +388,30 @@
 				}
 			}
 			equipmentContainer();
+
+			function modelContainer(){
+				var $modelContainer=$content.children('.model-container'),
+					intro={
+						hero:'英雄',
+						equipment:'装备'
+					};
+				for(var p in modelElements)
+					(function(model){
+						var $el=$('<div></div>',{'class':'fl model-button'}).html(model[0].toUpperCase()).attr('title',intro[model]).on('click',function(){
+							changeModel(model);
+							$(this).addClass('focus').siblings().removeClass('focus');
+						}).appendTo($modelContainer);
+						config.model===model&&(changeModel(model,true),$el.click());
+					})(p);
+				function changeModel(model,init){
+					if(init||config.model!==model){
+						config.model=model;
+						for(var p in modelElements)
+							p===model?modelElements[p].fadeIn(300):modelElements[p].hide();
+					}
+				}
+			}
+			modelContainer();
 		});
 	</script>
 </body>
