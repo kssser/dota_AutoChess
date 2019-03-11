@@ -46,6 +46,7 @@ html,body{
 		}
 	}
 	.hero-container,.equipment-container{
+		display:none;
 		position:absolute;
 		left:0;right:0;
 		top:65px;
@@ -70,7 +71,6 @@ html,body{
 		}
 	}
 	.hero-container{
-		display:none;
 		.hero-detail{
 			.tab-container .tab-nav li{
 				cursor:pointer;
@@ -114,7 +114,7 @@ html,body{
 			border-radius:50%;
 			cursor:pointer;
 			background-color:#44f;
-			margin-right:4px;
+			margin:0 2px;
 			color:#fff;
 			opacity:.7;
 			transform:scale(.8);
@@ -125,48 +125,6 @@ html,body{
 				transform:scale(1);
 			}
 		}
-	}
-}
-@media screen and (max-width:999px){
-    .content{
-    	width:auto;
-    	top:5px;bottom:5px;
-    	left:10px;right:10px;
-    	&>div+div{
-	    	padding:0 10px;
-	    	margin-top:4px;
-	    }
-	    .title{display:none;}
-		.hero-list,.race-list,.career-list{
-			li{
-				cursor:pointer;
-				margin-right:5px;
-				font-size:12px;
-			}
-		}
-		.hero-container,.equipment-container{
-			.switch{
-				font-size:12px;
-			}
-		}
-    }
-	.team-hero,.buff-list{
-		font-size:12px;
-	}
-	.tab-container{
-		font-size:12px;
-	}
-	.intro{
-		margin-left:-10px;
-		margin-bottom:0;
-		font-size:12px;
-	}
-	.buff-title{
-		margin-right:8px;
-		font-weight:bold;
-	}
-	.placeholder{
-		width:5px;
 	}
 }
 
@@ -188,4 +146,46 @@ html,body{
 	display:inline-block;
 	width:10px;
 	vertical-align:top;
+}
+
+@media screen and (max-width:999px){
+    .content{
+    	width:auto;
+    	top:5px;bottom:5px;
+    	left:10px;right:10px;
+		.intro{
+			margin-left:-10px;
+			margin-bottom:0;
+			font-size:12px;
+		}
+		.list-item{
+			margin-right:5px;
+			font-size:12px;
+		}
+	    .title{display:none;}
+		.hero-container,.equipment-container{
+			top:0;
+			font-size:12px;
+			&>div{
+				margin-top:5px;
+				padding:0 10px;
+			}
+			.switch{
+				font-size:12px;
+			}
+		}
+		.hero-container{
+			.team-buff{
+				.buff-title{
+					margin-right:10px;
+				}
+			}
+		}
+		.model-container{
+			bottom:5px;
+		}
+    }
+	.placeholder{
+		width:5px;
+	}
 }
