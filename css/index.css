@@ -78,6 +78,9 @@ body {
 .content .equipment-container .switch:hover {
   color: #fff;
 }
+.content .hero-container {
+  display: none;
+}
 .content .hero-container .hero-detail .tab-container .tab-nav li {
   cursor: pointer;
   margin-right: 10px;
@@ -90,8 +93,39 @@ body {
   margin-right: 15px;
   font-weight: bold;
 }
-.content .equipment-container {
-  display: none;
+.content .equipment-container .list-item {
+  position: relative;
+}
+.content .equipment-container .list-item.addition:before {
+  content: attr(data-number);
+  font-size: 12px;
+  position: absolute;
+  right: -6px;
+  top: -3px;
+}
+.content .model-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.content .model-container .model-button {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #44f;
+  margin-right: 4px;
+  color: #fff;
+  opacity: .7;
+  transform: scale(0.8);
+}
+.content .model-container .model-button.focus {
+  background-color: #f44;
+  opacity: 1;
+  color: #fff !important;
+  transform: scale(1);
 }
 @media screen and (max-width: 999px) {
   .content {
@@ -113,6 +147,10 @@ body {
   .content .career-list li {
     cursor: pointer;
     margin-right: 5px;
+    font-size: 12px;
+  }
+  .content .hero-container .switch,
+  .content .equipment-container .switch {
     font-size: 12px;
   }
   .team-hero,
@@ -151,6 +189,6 @@ body {
 }
 .placeholder {
   display: inline-block;
-  width: 15px;
+  width: 10px;
   vertical-align: top;
 }
