@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<div class="team-buff">
-					<p class="intro"><span>全队buff查询</span> <button class="switch">开启(点此开启全队buff查询)</button></p>
+					<p class="intro"><span>全队buff查询</span><button class="switch">开启(点此开启全队buff查询)</button></p>
 					<div class="team-hero"></div>
 					<div class="buff-list"></div>
 				</div>
@@ -47,7 +47,7 @@
 					<div class="ctx"></div>
 				</div>
 				<div class="detect">
-					<p class="intro"><span>装备合成检测</span> <button class="switch">开启(点此开启装备合成检测)</button></p>
+					<p class="intro"><span>装备合成检测</span><button class="switch">开启(点此开启装备合成检测)</button></p>
 					<div class="equipments"></div>
 				</div>
 			</div>
@@ -300,12 +300,12 @@
 								}
 							}else{
 								equipmentDetect.select($(this));
-								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('<em class="placeholder"></em>'):"");
+								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('+'):"");
 							}
 						}).on('contextmenu',function(e){
 							if(config.equipment.model==='total'){
 								equipmentDetect.unselect($el);
-								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('<em class="placeholder"></em>'):"");
+								$equipments.html(equipmentDetect.data.length?equipment.detect(equipmentDetect.data).join('+'):"");
 							}
 						});
 					})($li,p);
