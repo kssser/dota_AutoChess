@@ -72,7 +72,7 @@
 				},
 				equipment:{
 					model:'alone',	// alone or total
-					limit:9
+					limit:20
 				}
 			};
 
@@ -331,10 +331,10 @@
 					},
 					select:function($el){
 						var equipmentName=$el.html();
-						// if(this.data.length>=config.equipment.limit){
-						// 	alert(config.equipment.limit+'个装备你放的下吗');
-						// 	return;
-						// }
+						if(this.data.length>=config.equipment.limit){
+							alert(config.equipment.limit+'个装备你放的下吗');
+							return;
+						}
 						if(this.data.indexOf(equipmentName)===-1){
 							$el.addClass('selected');
 						}else{
