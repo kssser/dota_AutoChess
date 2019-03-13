@@ -639,7 +639,7 @@ _Equipment.prototype.getRange=function(equipment){
 	return this.verifyExist(equipment)?this.species[equipment].range:-1;
 };
 // 为this.detect统计当前物品而生
-_Equipment.prototype._objectCombine=function(o1,o2){
+_Equipment.prototype._objectAssign=function(o1,o2){
 	var res={},
 		isBug=false;
 	[o1,o2].forEach(function(item){
@@ -648,7 +648,7 @@ _Equipment.prototype._objectCombine=function(o1,o2){
 				var len=item[p].number;
 				if(len<0){	// 添加bug检测，防止页面卡死
 					isBug=true;
-					console.warn(existBug+' in function _Equipment.prototype._objectCombine!');
+					console.warn(existBug+' in function _Equipment.prototype._objectAssign!');
 					return;
 				}
 				while(item[p].number--)
@@ -663,9 +663,30 @@ _Equipment.prototype._clearEmptyItem=function(array){
 		while(len--)
 			if(array[len]===undefined)
 				array.splice(len,1);
+			else if(Array.isArray(array[len]))
+				array[len]=this._clearEmptyItem(array[len]);
 		return array;
 	}else
 		console.warn('function _Equipment.prototype._clearEmptyItem need an array as a parameter!');
+};
+_Equipment.prototype._sort=function(oEquipments){
+	var equipments=[],
+		res=[];
+	for(var p in oEquipments){
+		var oCur=Object.assign({},{name:p},oEquipments[p]),
+			idx=oCur.indexs[oCur.indexs.length-1];
+		equipments[idx]?(Array.isArray(equipments[idx])?equipments[idx].push(oCur):(equipments[idx]=[equipments[idx],oCur])):(equipments[idx]=oCur);
+	}
+	equipments.forEach(function(item){
+		if(Array.isArray(item)){
+			item.sort(function(a,b){return a[0]-b[0]});
+			item.forEach(function(itm){
+				res.push(itm);
+			});
+		}else
+			res.push(item);
+	});
+	return res;
 };
 // 装备检测+合成(equipments=>[装备名*n])(注：合成与放入顺序有关--两件合成物品同时需要且存在某一物品时)
 _Equipment.prototype.detect=function(equipments){
@@ -706,20 +727,26 @@ _Equipment.prototype.detect=function(equipments){
 				if(!(need in oEquipments)||oEquipments[need].number<oNeeds[need]){
 					curUpgrade=false;
 					break;
+				}else{
+					oSynthetic[p].indexs.push(oEquipments[need].indexs[0]);
 				}
 			}
-			if(curUpgrade){
-				var idx=100;
-				e.needs.forEach(function(item){
-					oEquipments[item].number--;
-					idx=Math.min(idx,oEquipments[item].indexs.splice(0,1));
-				});
-				oSynthetic[p].number++;
-				oSynthetic[p].indexs.push(idx);
-				hasUpgrade=true;
-			}
+			curUpgrade?(hasUpgrade=true,oSynthetic[p].indexs.sort(function(a,b){return a-b})):delete oSynthetic[p];
 		}
-		var oRes=this._objectCombine(oEquipments,oSynthetic);
+		var aSynthetic=this._sort(oSynthetic);
+		aSynthetic.forEach(function(item){
+			var i=0,needs=self.species[item.name].needs,len=needs.length;
+			for(;i<len;i++)
+				if(oEquipments[needs[i]].number<=0)
+					return;
+			needs.forEach(function(itm){
+				oEquipments[itm].number--;
+				oEquipments[itm].indexs.splice(0,1);
+			});
+			oSynthetic[item.name].number++;
+			oSynthetic[item.name].indexs.length=1;
+		});
+		var oRes=this._objectAssign(oEquipments,oSynthetic);
 		if(oRes===existBug)
 			return existBug;
 		for(var p in oRes){
