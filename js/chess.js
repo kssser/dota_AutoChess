@@ -34,7 +34,7 @@ function Chess(){
 			"9":"友方精灵闪避+75%[+20%+25%+30%]"
 		},
 		"恶魔":{
-			"唯一":"友方场上存在唯一恶魔时，该恶魔攻击+50%"
+			"唯一":"友方场上存在唯一种类恶魔时，该种类恶魔攻击+50%"
 		},
 		"娜迦":{
 			"2":"友方全体魔抗+30",
@@ -97,7 +97,8 @@ function Chess(){
 			"2":"开局随机羊一敌人6s"
 		},
 		"恶魔猎手":{
-			"任意":"敌方恶魔不加攻击"
+			"1":"敌方恶魔不加攻击",
+			"2":"友方恶魔视为同一种恶魔"
 		},
 	};
 	// 英雄
@@ -316,6 +317,11 @@ Chess.prototype.getBuff=function(team){
 				oBuff.career[hero.career]=1;
 		}
 	});
+	// 恶魔猎手(2)特殊处理
+	(function(){
+		if(oBuff.career['恶魔猎手']===2&&oBuff.race['恶魔']>1)
+			oBuff.race['恶魔']=1;
+	})();
 	for(var p in oBuff)
 		for(var pp in oBuff[p]){
 			var buff=this.getBuffByMessage(p,pp,oBuff[p][pp]);
